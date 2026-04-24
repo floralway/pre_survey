@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>了解問卷｜質穎形象顏究室®</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    background: #FAF7F4;
+    color: #2C2A28;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  /* Progress */
+  .progress-wrap {
+    height: 3px;
+    background: #E8E0D8;
+    border-radius: 2px;
+    margin-bottom: 2.5rem;
+  }
+  .progress-fill {
+    height: 100%;
+    background: #C99E85;
+    border-radius: 2px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* Slides */
+  .slide { display: none; animation: fadeUp 0.35s ease; }
+  .slide.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Logo area */
+  .brand {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: #C99E85;
+    margin-bottom: 2rem;
+    font-weight: 500;
+  }
+
+  /* Intro */
+  .intro-title {
+    font-size: 22px;
+    font-weight: 500;
+    color: #C99E85;
+    margin-bottom: 1.25rem;
+    line-height: 1.4;
+  }
+  .intro-body {
+    font-size: 15px;
+    color: #5C5752;
+    line-height: 2;
+    margin-bottom: 2rem;
+  }
+
+  /* Slide header */
+  .slide-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: #B4AFA9;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+  .slide-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #2C2A28;
+    line-height: 1.5;
+    margin-bottom: 0.35rem;
+  }
+  .slide-sub {
+    font-size: 13px;
+    color: #8C8880;
+    margin-bottom: 1.25rem;
+    line-height: 1.6;
+  }
+
+  /* Form fields */
+  .field { margin-bottom: 1rem; }
+  .field label {
+    display: block;
+    font-size: 13px;
+    color: #8C8880;
+    margin-bottom: 6px;
+  }
+  .field label span { color: #C99E85; }
+  input[type="text"], input[type="email"], textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid #DDD8D2;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #fff;
+    color: #2C2A28;
+    outline: none;
+    transition: border 0.2s;
+    font-family: inherit;
+  }
+  input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+    border-color: #C99E85;
+    box-shadow: 0 0 0 3px rgba(201,158,133,0.12);
+  }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+  .field-err {
+    font-size: 12px;
+    color: #C99E85;
+    margin-top: 5px;
+    display: none;
+  }
+
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 11px 14px;
+    border: 1px solid #DDD8D2;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border 0.15s, background 0.15s;
+    user-select: none;
+    background: #fff;
+  }
+  .opt:hover { border-color: #C99E85; background: rgba(201,158,133,0.04); }
+  .opt.sel   { border-color: #C99E85; background: rgba(201,158,133,0.07); }
+  .opt input { accent-color: #C99E85; margin-top: 2px; flex-shrink: 0; }
+  .opt-text  { font-size: 14px; color: #2C2A28; line-height: 1.5; }
+  .other-input {
+    width: 100%;
+    margin-top: 8px;
+    padding: 9px 12px;
+    border: 1px solid #DDD8D2;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fff;
+    color: #2C2A28;
+    outline: none;
+    font-family: inherit;
+    display: none;
+  }
+  .other-input:focus { border-color: #C99E85; }
+
+  /* Sub question */
+  .sub-q {
+    margin-top: 10px;
+    padding: 14px;
+    background: #F5F0EC;
+    border-radius: 8px;
+    display: none;
+  }
+  .sub-q.vis { display: block; }
+  .sub-q .slide-sub { margin-bottom: 10px; font-size: 13px; }
+
+  /* Nav */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+  }
+  .btn-back {
+    padding: 10px 18px;
+    border: 1px solid #DDD8D2;
+    border-radius: 8px;
+    background: transparent;
+    color: #8C8880;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: inherit;
+  }
+  .btn-back:hover { background: #F0EBE6; }
+  .btn-next {
+    padding: 11px 28px;
+    border: none;
+    border-radius: 8px;
+    background: #C99E85;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    font-family: inherit;
+  }
+  .btn-next:hover { opacity: 0.87; }
+  .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+  .step-count { font-size: 13px; color: #B4AFA9; }
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+
+  /* Sending state */
+  .sending-wrap {
+    text-align: center;
+    padding: 3rem 0;
+  }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid #E8E0D8;
+    border-top-color: #C99E85;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 1rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .sending-text { font-size: 14px; color: #8C8880; }
+
+  /* Thank you */
+  .thank-wrap { text-align: center; padding: 2rem 0; }
+  .thank-icon { font-size: 36px; margin-bottom: 1rem; }
+  .thank-title { font-size: 19px; font-weight: 500; color: #2C2A28; margin-bottom: 0.75rem; }
+  .thank-body { font-size: 14px; color: #5C5752; line-height: 1.9; }
+  .thank-accent { color: #C99E85; }
+
+  /* Result card on thank you page */
+  .grade-card {
+    margin-top: 1.75rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 10px;
+    text-align: left;
+  }
+  .grade-card.a { background: rgba(201,158,133,0.08); border: 1px solid rgba(201,158,133,0.25); }
+  .grade-card.b { background: rgba(93,202,165,0.07); border: 1px solid rgba(93,202,165,0.25); }
+  .grade-card.c { background: #F5F0EC; border: 1px solid #E8E0D8; }
+  .grade-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .grade-card.a .grade-badge { background: rgba(201,158,133,0.18); color: #7A5035; }
+  .grade-card.b .grade-badge { background: rgba(93,202,165,0.15); color: #0F6E56; }
+  .grade-card.c .grade-badge { background: #E8E0D8; color: #5C5752; }
+  .grade-title { font-size: 16px; font-weight: 500; color: #2C2A28; margin-bottom: 0.5rem; }
+  .grade-body { font-size: 13px; color: #5C5752; line-height: 1.8; margin-bottom: 1rem; }
+  .cta-link {
+    display: block;
+    width: 100%;
+    padding: 11px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+  .cta-link:hover { opacity: 0.87; }
+  .cta-a { background: #C99E85; color: #fff; }
+  .cta-b { background: #1D9E75; color: #fff; }
+  .cta-c { background: #fff; color: #2C2A28; border: 1px solid #DDD8D2; }
+
+  @media (max-width: 480px) {
+    body { padding: 1.5rem 1rem 3rem; }
+    .intro-title { font-size: 19px; }
+    .slide-title { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="brand">質穎形象顏究室®</div>
+  <div class="progress-wrap"><div class="progress-fill" id="pb"></div></div>
+
+  <!-- Slide 0: Intro -->
+  <div class="slide active" id="s0">
+    <div class="intro-title">在開始之前 🤍</div>
+    <div class="intro-body">
+      在正式開始之前，想先邀請你花一點時間填寫這份小小的了解問卷。<br><br>
+      由於 Evelyn 老師目前的服務時段較為有限，也希望能在最短的時間內，真正幫助到每一位有需求的人，因此會先透過這份問卷，初步了解你目前在「穿搭與外在形象」上的狀態與困擾。<br><br>
+      填寫完成後，Evelyn 老師會依照你的情況，優先提供更精準、也更貼近你需求的方向建議與回饋。<br><br>
+      也能幫助你更清楚判斷：「現在的你，最適合從哪一步開始。」<br><br>
+      謝謝你願意花時間讓我更了解你 🤍
+    </div>
+    <div class="nav">
+      <span></span>
+      <button class="btn-next" onclick="go(1)">開始填寫 →</button>
+    </div>
+  </div>
+
+  <!-- Slide 1: Name + Email -->
+  <div class="slide" id="s1">
+    <div class="slide-label">基本資料</div>
+    <div class="slide-title">請告訴我你的名字</div>
+    <div class="slide-sub">方便 Evelyn 老師後續與你聯繫</div>
+    <div class="field">
+      <label>姓名 <span>*</span></label>
+      <input type="text" id="f-name" placeholder="請輸入姓名">
+      <div class="field-err" id="err-name">請填寫姓名</div>
+    </div>
+    <div class="field">
+      <label>電子郵件 <span>*</span></label>
+      <input type="email" id="f-email" placeholder="example@mail.com">
+      <div class="field-err" id="err-email">請填寫有效的電子郵件</div>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="go(0)">← 返回</button>
+      <div class="nav-right">
+        <span class="step-count">1 / 8</span>
+        <button class="btn-next" onclick="validateInfo()">下一題 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 2: Q1 -->
+  <div class="slide" id="s2">
+    <div class="slide-label">第 1 題 — 需求動機</div>
+    <div class="slide-title">你目前想調整外在形象的原因是什麼？</div>
+    <div class="slide-sub">可複選</div>
+    <div class="options" id="q1">
+      <label class="opt"><input type="checkbox" value="work"><span class="opt-text">工作或商務場合有需求</span></label>
+      <label class="opt"><input type="checkbox" value="style"><span class="opt-text">一直找不到適合自己的穿搭風格</span></label>
+      <label class="opt"><input type="checkbox" value="start"><span class="opt-text">很想改變，但不知道該怎麼開始</span></label>
+      <label class="opt"><input type="checkbox" value="self"><span class="opt-text">純粹想更了解自己、提升整體狀態</span></label>
+      <label class="opt"><input type="checkbox" value="other1" onchange="toggleOther('q1-other', this)"><span class="opt-text">其他</span></label>
+      <input type="text" class="other-input" id="q1-other" placeholder="請簡單說明⋯">
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="go(1)">← 返回</button>
+      <div class="nav-right">
+        <span class="step-count">2 / 8</span>
+        <button class="btn-next" onclick="go(3)">下一題 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: Q2 -->
+  <div class="slide" id="s3">
+    <div class="slide-label">第 2 題 — 認知程度</div>
+    <div class="slide-title">你是否曾做過相關分析？</div>
+    <div class="slide-sub">色彩 / 骨骼 / 風格等</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="q2" value="no" onchange="toggleSubQ2(this)"><span class="opt-text">沒有做過</span></label>
+      <label class="opt"><input type="radio" name="q2" value="yes" onchange="toggleSubQ2(this)"><span class="opt-text">有做過</span></label>
+    </div>
+    <div class="sub-q" id="q2-sub">
+      <div class="slide-sub">這些分析對你目前的幫助是：</div>
+      <div class="options">
+        <label class="opt"><input type="radio" name="q2b" value="apply"><span class="opt-text">有幫助，也能實際運用</span></label>
+        <label class="opt"><input type="radio" name="q2b" value="unclear"><span class="opt-text">有幫助，但不知道怎麼落地執行</span></label>
+        <label class="opt"><input type="radio" name="q2b" value="confused"><span class="opt-text">幫助不大 / 有點混亂</span></label>
+        <label class="opt"><input type="radio" name="q2b" value="none"><span class="opt-text">幾乎沒有幫助</span></label>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="go(2)">← 返回</button>
+      <div class="nav-right">
+        <span class="step-count">3 / 8</span>
+        <button class="btn-next" onclick="go(4)">下一題 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: Q3 -->
+  <div class="slide" id="s4">
+    <div class="slide-label">第 3 題 — 接觸來源</div>
+    <div class="slide-title">你會對 Evelyn 老師產生興趣的原因是？</div>
+    <div class="slide-sub">可複選</div>
+    <div class="options" id="q3">
+      <label class="opt"><input type="checkbox" value="content"><span class="opt-text">社群內容分享很實用、有收穫</span></label>
+      <label class="opt"><input type="checkbox" value="authentic"><span class="opt-text">覺得老師的觀點很真實、不浮誇</span></label>
+      <label class="opt"><input type="checkbox" value="referral"><span class="opt-text">親友推薦</span></label>
+      <label class="opt"><input type="checkbox" value="reviews"><span class="opt-text">看到其他學員／客戶的真實回饋</span></label>
+      <label class="opt"><input type="checkbox" value="other3" onchange="toggleOther('q3-other', this)"><span class="opt-text">其他</span></label>
+      <input type="text" class="other-input" id="q3-other" placeholder="請簡單說明⋯">
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="go(3)">← 返回</button>
+      <div class="nav-right">
+        <span class="step-count">4 / 8</span>
+        <button class="btn-next" onclick="go(5)">下一題 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Q4 -->
+  <div class="slide" id="s5">
+    <div class="slide-label">第 4 題 — 經濟預算</div>
+    <div class="slide-title">目前你在穿搭上的每月預算大約是？</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="q4" value="low"><span class="opt-text">$3,000 以內</span></label>
+      <label class="opt"><input type="radio" name="q4" value="mid"><span class="opt-text">$5,000 左右</span></label>
+      <label class="opt"><input type="radio" name="q4" value="high"><span class="opt-text">$8,000 以上</span></label>
+      <label class="opt"><input type="radio" name="q4" value="unlimited"><span class="opt-text">沒有特別限制，喜歡就會購買</span></label>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="go(4)">← 返回</button>
+      <div class="nav-right">
+        <span class="step-count">5 / 8</span>
+        <button class="btn-next" onclick="go(6)">下一題 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 6: Q5 -->
+  <div class="slide" id="s6">
+    <div class="slide-label">第 5 題 — 心態認同</div>
+    <div class="slide-title">你如何看待「穿搭與外在形象」這件事？</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="q5" value="invest"><span class="opt-text">我認為這是一種對自己的投資</span></label>
+      <label class="opt"><input type="radio" name="q5" value="notyet"><span class="opt-text">覺得重要，但還沒有真正開始整理</span></label>
+      <label class="opt"><input type="radio" name="q5" value="casual"><span class="opt-text">可有可無，看心情</span></label>
+      <label class="opt"><input type="radio" name="q5" value="unimp"><span class="opt-text">對我來說不太重要</span></label>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="go(5)">← 返回</button>
+      <div class="nav-right">
+        <span class="step-count">6 / 8</span>
+        <button class="btn-next" onclick="go(7)">下一題 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7: Q6 -->
+  <div class="slide" id="s7">
+    <div class="slide-label">第 6 題 — 工作型態</div>
+    <div class="slide-title">你的工作型態較接近哪一種？</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="q6" value="high"><span class="opt-text">需要頻繁與人面對面互動（業務／顧問／服務業）</span></label>
+      <label class="opt"><input type="radio" name="q6" value="mid"><span class="opt-text">偶爾需要對外，但多數時間為內部工作</span></label>
+      <label class="opt"><input type="radio" name="q6" value="low"><span class="opt-text">主要為內勤 / 行政 / 幕後工作</span></label>
+      <label class="opt"><input type="radio" name="q6" value="social"><span class="opt-text">經常需要出席商務場合 / 社交場合</span></label>
+      <label class="opt"><input type="radio" name="q6" value="other6" onchange="toggleOther('q6-other', this)"><span class="opt-text">其他</span></label>
+      <input type="text" class="other-input" id="q6-other" placeholder="請簡單說明⋯">
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="go(6)">← 返回</button>
+      <div class="nav-right">
+        <span class="step-count">7 / 8</span>
+        <button class="btn-next" onclick="go(8)">下一題 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 8: Q7 -->
+  <div class="slide" id="s8">
+    <div class="slide-label">加分題（可選）</div>
+    <div class="slide-title">目前在穿搭上，最困擾你的三個問題是？</div>
+    <div class="slide-sub">請簡單描述即可，這將幫助 Evelyn 老師更精準地了解你的狀況</div>
+    <div class="field">
+      <label>困擾 1</label>
+      <textarea id="q7a" placeholder="例：每天早上不知道要穿什麼⋯"></textarea>
+    </div>
+    <div class="field">
+      <label>困擾 2</label>
+      <textarea id="q7b" placeholder="例：買了很多衣服，但總覺得缺少一件⋯"></textarea>
+    </div>
+    <div class="field">
+      <label>困擾 3</label>
+      <textarea id="q7c" placeholder="例：不確定什麼顏色適合自己⋯"></textarea>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="go(7)">← 返回</button>
+      <div class="nav-right">
+        <span class="step-count">8 / 8</span>
+        <button class="btn-next" id="submit-btn" onclick="submitSurvey()">送出問卷 ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 9: Sending -->
+  <div class="slide" id="s9">
+    <div class="sending-wrap">
+      <div class="spinner"></div>
+      <div class="sending-text">正在送出你的回答⋯</div>
+    </div>
+  </div>
+
+  <!-- Slide 10: Thank you -->
+  <div class="slide" id="s10">
+    <div class="thank-wrap">
+      <div class="thank-icon">🤍</div>
+      <div class="thank-title">謝謝你的填寫</div>
+      <div class="thank-body">
+        Evelyn 老師已收到你的回答，<br>
+        也會有一封信寄到你的信箱，<br>
+        裡面有她想跟你說的話 🤍
+      </div>
+      <div id="grade-card-area"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── 請把這裡換成你的 Apps Script 網址 ──
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyONoHjLrnSxiIIIkMw7AArFzOMzVSv-rqrldg7LSl63P06zwLYSGZN39P1pJ0ZfF0r/exec';
+
+  // 預約連結（已有）
+  const BOOKING_URL = 'YOUR_BOOKING_URL_HERE';
+  // 直播課報名連結（placeholder）
+  const LIVESTREAM_URL = '#';
+
+  function go(n) {
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    document.getElementById('s' + n).classList.add('active');
+    const pct = n === 0 ? 0 : n >= 9 ? 100 : Math.round((n / 8) * 100);
+    document.getElementById('pb').style.width = pct + '%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggleOther(inputId, cb) {
+    const el = document.getElementById(inputId);
+    if (el) el.style.display = cb.checked ? 'block' : 'none';
+  }
+
+  function toggleSubQ2(radio) {
+    document.getElementById('q2-sub').className = 'sub-q' + (radio.value === 'yes' ? ' vis' : '');
+  }
+
+  // Click handler for option items
+  document.querySelectorAll('.opt').forEach(item => {
+    item.addEventListener('click', function (e) {
+      const inp = this.querySelector('input');
+      if (!inp || e.target === inp || e.target.tagName === 'INPUT') return;
+      if (inp.type === 'radio') {
+        const name = inp.name;
+        document.querySelectorAll('input[name="' + name + '"]').forEach(r => {
+          r.closest('.opt').classList.remove('sel');
+        });
+        inp.checked = true;
+        this.classList.add('sel');
+        inp.dispatchEvent(new Event('change'));
+      } else if (inp.type === 'checkbox') {
+        inp.checked = !inp.checked;
+        this.classList.toggle('sel', inp.checked);
+        inp.dispatchEvent(new Event('change'));
+      }
+    });
+  });
+
+  function validateInfo() {
+    const name = document.getElementById('f-name').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    let ok = true;
+    const ne = document.getElementById('err-name');
+    const ee = document.getElementById('err-email');
+    ne.style.display = 'none';
+    ee.style.display = 'none';
+    if (!name) { ne.style.display = 'block'; ok = false; }
+    if (!email || !email.includes('@') || !email.includes('.')) { ee.style.display = 'block'; ok = false; }
+    if (ok) go(2);
+  }
+
+  // ── Scoring ──
+  function calcScore() {
+    let pts = 0;
+
+    // Q1 需求動機
+    const q1vals = Array.from(document.querySelectorAll('#q1 input[type=checkbox]:checked')).map(i => i.value);
+    if (q1vals.includes('work') || q1vals.includes('style') || q1vals.includes('start')) pts += 3;
+    else if (q1vals.includes('self')) pts += 2;
+    else pts += 1;
+
+    // Q2 認知程度
+    const q2 = document.querySelector('input[name=q2]:checked');
+    const q2b = document.querySelector('input[name=q2b]:checked');
+    if (q2) {
+      if (q2.value === 'no') pts += 2;
+      else if (q2b) {
+        if (q2b.value === 'unclear' || q2b.value === 'confused') pts += 3;
+        else if (q2b.value === 'none') pts += 2;
+        else pts += 1;
+      }
+    }
+
+    // Q4 預算
+    const q4 = document.querySelector('input[name=q4]:checked');
+    if (q4) {
+      if (q4.value === 'unlimited' || q4.value === 'high') pts += 3;
+      else if (q4.value === 'mid') pts += 2;
+      else pts += 1;
+    }
+
+    // Q5 心態
+    const q5 = document.querySelector('input[name=q5]:checked');
+    if (q5) {
+      if (q5.value === 'invest') pts += 3;
+      else if (q5.value === 'notyet') pts += 2;
+      else pts += 1;
+    }
+
+    // Q6 工作型態
+    const q6 = document.querySelector('input[name=q6]:checked');
+    if (q6) {
+      if (q6.value === 'high' || q6.value === 'social') pts += 3;
+      else if (q6.value === 'mid') pts += 2;
+      else pts += 1;
+    }
+
+    return pts;
+  }
+
+  function getGrade(pts) {
+    if (pts >= 12) return 'A';
+    if (pts >= 7)  return 'B';
+    return 'C';
+  }
+
+  function collectData() {
+    const q1checked = Array.from(document.querySelectorAll('#q1 input[type=checkbox]:checked')).map(i => i.value);
+    const q1other = document.getElementById('q1-other').value.trim();
+    const q3checked = Array.from(document.querySelectorAll('#q3 input[type=checkbox]:checked')).map(i => i.value);
+    const q3other = document.getElementById('q3-other').value.trim();
+    const q2 = document.querySelector('input[name=q2]:checked');
+    const q2b = document.querySelector('input[name=q2b]:checked');
+    const q4 = document.querySelector('input[name=q4]:checked');
+    const q5 = document.querySelector('input[name=q5]:checked');
+    const q6 = document.querySelector('input[name=q6]:checked');
+    const q6other = document.getElementById('q6-other').value.trim();
+
+    const pts = calcScore();
+    const grade = getGrade(pts);
+
+    return {
+      name: document.getElementById('f-name').value.trim(),
+      email: document.getElementById('f-email').value.trim(),
+      score: pts,
+      grade: grade,
+      q1: q1checked.join(', ') + (q1other ? '（' + q1other + '）' : ''),
+      q2: q2 ? q2.value : '',
+      q2b: q2b ? q2b.value : '',
+      q3: q3checked.join(', ') + (q3other ? '（' + q3other + '）' : ''),
+      q4: q4 ? q4.value : '',
+      q5: q5 ? q5.value : '',
+      q6: (q6 ? q6.value : '') + (q6other ? '（' + q6other + '）' : ''),
+      q7a: document.getElementById('q7a').value.trim(),
+      q7b: document.getElementById('q7b').value.trim(),
+      q7c: document.getElementById('q7c').value.trim(),
+    };
+  }
+
+  function showGradeCard(grade, pts) {
+    const area = document.getElementById('grade-card-area');
+    const cards = {
+      A: `<div class="grade-card a">
+            <span class="grade-badge">等級 A · ${pts} 分</span>
+            <div class="grade-title">你已經準備好了 ✨</div>
+            <div class="grade-body">Evelyn 老師誠摯邀請你來聊聊，我們一起找到最適合你的起點。</div>
+            <a class="cta-link cta-a" href="${BOOKING_URL}" target="_blank">預約免費一對一預諮詢 →</a>
+          </div>`,
+      B: `<div class="grade-card b">
+            <span class="grade-badge">等級 B · ${pts} 分</span>
+            <div class="grade-title">你正在對的路上 🌿</div>
+            <div class="grade-body">帶著現在的狀態來就好，讓 Evelyn 老師陪你把方向理清楚。</div>
+            <a class="cta-link cta-b" href="${BOOKING_URL}" target="_blank">預約免費一對一預諮詢 →</a>
+          </div>`,
+      C: `<div class="grade-card c">
+            <span class="grade-badge">等級 C · ${pts} 分</span>
+            <div class="grade-title">先從了解自己開始 🌸</div>
+            <div class="grade-body">歡迎先來每月的免費線上直播課，慢慢找到屬於你的方向。</div>
+            <a class="cta-link cta-c" href="${LIVESTREAM_URL}" target="_blank">報名每月免費直播課程 →</a>
+          </div>`,
+    };
+    area.innerHTML = cards[grade] || '';
+  }
+
+  async function submitSurvey() {
+    const data = collectData();
+    go(9); // show sending
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+    } catch (e) {
+      console.warn('送出時發生錯誤', e);
+    }
+
+    showGradeCard(data.grade, data.score);
+    go(10);
+  }
+</script>
+</body>
+</html>
