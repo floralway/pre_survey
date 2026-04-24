@@ -505,7 +505,7 @@
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyONoHjLrnSxiIIIkMw7AArFzOMzVSv-rqrldg7LSl63P06zwLYSGZN39P1pJ0ZfF0r/exec';
 
   // 預約連結（已有）
-  const BOOKING_URL = 'YOUR_BOOKING_URL_HERE';
+  const BOOKING_URL = 'https://calendly.com/floralway-image/30min';
   // 直播課報名連結（placeholder）
   const LIVESTREAM_URL = '#';
 
