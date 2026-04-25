@@ -706,16 +706,16 @@
     go(9); // show sending
 
     try {
-      await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
+      const params = new URLSearchParams({ payload: JSON.stringify(data) });
+      await fetch(APPS_SCRIPT_URL + '?' + params.toString(), {
+        method: 'GET',
         mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
       });
     } catch (e) {
       console.warn('送出時發生錯誤', e);
     }
 
+    await new Promise(r => setTimeout(r, 1000));
     go(10);
   }
 </script>
