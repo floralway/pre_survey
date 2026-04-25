@@ -299,11 +299,11 @@
   <!-- Slide 1: Name + Email -->
   <div class="slide" id="s1">
     <div class="slide-label">基本資料</div>
-    <div class="slide-title">請告訴我你的名字</div>
+    <div class="slide-title">你希望怎麼被稱呼？</div>
     <div class="slide-sub">方便 Evelyn 老師後續與你聯繫</div>
     <div class="field">
-      <label>姓名 <span>*</span></label>
-      <input type="text" id="f-name" placeholder="請輸入姓名">
+      <label>稱呼 <span>*</span></label>
+      <input type="text" id="f-name" placeholder="例：小美、Annie、王小姐⋯">
       <div class="field-err" id="err-name">請填寫姓名</div>
     </div>
     <div class="field">
@@ -490,21 +490,49 @@
       <div class="thank-icon">🤍</div>
       <div class="thank-title">謝謝你的填寫</div>
       <div class="thank-body">
-        Evelyn 老師已收到你的回答，<br>
-        也會有一封信寄到你的信箱，<br>
-        裡面有她想跟你說的話 🤍
+        剛剛的問卷結果已經寄到你的信箱了，<br>
+        快去收信吧——<br>
+        裡面有 Evelyn 老師想跟你說的話。
       </div>
-      <div id="grade-card-area"></div>
+
+      <div style="margin-top:2.5rem;padding-top:2rem;border-top:1px solid #E8E0D8;">
+        <div style="font-size:13px;color:#B4AFA9;margin-bottom:1.25rem;letter-spacing:0.05em;">在等信的時候，也歡迎來找我 🌿</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+
+          <a href="https://lin.ee/WnDhDsF" target="_blank"
+            style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid #E8E0D8;border-radius:10px;text-decoration:none;background:#fff;transition:background 0.15s;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg"
+              style="width:22px;height:22px;object-fit:contain;flex-shrink:0;" alt="LINE">
+            <span style="font-size:14px;color:#2C2A28;font-weight:500;">加入 LINE 官方帳號</span>
+            <span style="margin-left:auto;font-size:13px;color:#C99E85;">→</span>
+          </a>
+
+          <a href="https://www.instagram.com/go_floralway/" target="_blank"
+            style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid #E8E0D8;border-radius:10px;text-decoration:none;background:#fff;transition:background 0.15s;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png"
+              style="width:22px;height:22px;object-fit:contain;border-radius:5px;flex-shrink:0;" alt="Instagram">
+            <span style="font-size:14px;color:#2C2A28;font-weight:500;">追蹤 Instagram</span>
+            <span style="font-size:13px;color:#B4AFA9;">@go_floralway</span>
+            <span style="margin-left:auto;font-size:13px;color:#C99E85;">→</span>
+          </a>
+
+          <a href="https://www.facebook.com/GoFloralway/" target="_blank"
+            style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid #E8E0D8;border-radius:10px;text-decoration:none;background:#fff;transition:background 0.15s;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+              style="width:22px;height:22px;object-fit:contain;flex-shrink:0;" alt="Facebook">
+            <span style="font-size:14px;color:#2C2A28;font-weight:500;">追蹤 Facebook</span>
+            <span style="margin-left:auto;font-size:13px;color:#C99E85;">→</span>
+          </a>
+
+        </div>
+      </div>
     </div>
   </div>
 
 </div>
 
 <script>
-  // ── 請把這裡換成你的 Apps Script 網址 ──
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyONoHjLrnSxiIIIkMw7AArFzOMzVSv-rqrldg7LSl63P06zwLYSGZN39P1pJ0ZfF0r/exec';
-
-  // 預約連結（已有）
   const BOOKING_URL = 'https://calendly.com/floralway-image/30min';
   // 直播課報名連結（placeholder）
   const LIVESTREAM_URL = '#';
@@ -688,7 +716,6 @@
       console.warn('送出時發生錯誤', e);
     }
 
-    showGradeCard(data.grade, data.score);
     go(10);
   }
 </script>
